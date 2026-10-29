@@ -1,0 +1,13 @@
+{
+  "upstream": "https://github.com/danielgomesvieira2000/beetle-adventure-racing-recomp",
+  "base_commit": "6497e67257809401468cd47850393775952b31bb",
+  "release_version": "v0.1.0-online-alpha",
+  "save_files": [
+    "general.json",
+    "graphics.json",
+    "input.json",
+    "mempak_p0.pak",
+    "mods.json",
+    "sound.json"
+  ]
+}

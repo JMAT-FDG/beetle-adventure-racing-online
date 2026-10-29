@@ -1,0 +1,243 @@
+//
+// RT64 -- Beetle Adventure Racing HUD anchoring and the port's HUD inspector
+//
+
+#pragma once
+
+#include <cstddef>
+#include <cstdint>
+
+#include "common/rt64_common.h"
+
+namespace RT64 {
+    struct Projection;
+    struct DrawCallTile;
+
+    // BAR authors its HUD against a fixed 320x240 screen, so in a widened frame RT64's default
+    // placement (scale the element about the frame's centre by the inverse aspect scale) leaves the
+    // whole HUD huddled in the middle 4:3 region with empty picture either side of it. Anchoring
+    // moves each element to the edge it belongs to instead, which is what the extended GBI's
+    // per-element origins exist for -- BAR emits none, so we classify its draws here and supply them.
+    //
+    // Two things decide an element's class, in this order:
+    //
+    //   1. A **tag**, looked up by the element's identity through the port (the inspector's live
+    //      override first, then hud.json). Tags apply EVERYWHERE, in menus as well as races.
+    //   2. The **positional heuristic** below, which runs only during a race. It is measured by
+    //      position (see docs/RACING_DRAW_MAP.md): everything in the top band is the speedometer
+    //      (left) and the timer and lap counter (right); everything in the bottom band is the course
+    //      map and the position counter (right); the middle band is where the centred race messages
+    //      ("GO!") are drawn and is deliberately left alone. It is racing-only because BAR's menu
+    //      screens are authored as whole 4:3 compositions and look broken pulled apart -- so a menu
+    //      element moves only when someone has explicitly tagged it.
+    namespace BarHud {
+        // What an element can be told to do. The values are the wire format: they are what the
+        // port's dropdown indexes and what hud.json's list names map to, so do not renumber them.
+        enum class Class : int {
+            Center  = 0,  // Leave RT64's default centring alone -- stay in the 4:3 box.
+            Left    = 1,  // Hold this element's distance from the left edge of the widened frame.
+            Right   = 2,  // Hold its distance from the right edge.
+            Stretch = 3,  // Do not squeeze it to 4:3 (G_EX_ASPECT_STRETCH). For backdrops and wipes.
+            Spill   = 4,  // Placement untouched; only lift the 4:3 scissor so it may run past the
+                          // old frame's edge. The one class that is about clipping, not placement.
+            Cover   = 5,  // ORTHOGRAPHIC LAYERS ONLY. Stretch, and then magnify the layer's content
+                          // about its centre by exactly enough to put BAR's overscan-safe rectangle
+                          // on the frame's edges. For a layer whose geometry is authored inset for a
+                          // CRT and so cannot reach the edges however the layer itself is scaled.
+            Sides   = 6,  // Split screen: each draw goes to the edge of the half it is drawn in --
+                          // Left if its centre is left of the screen's middle, Right otherwise. For
+                          // an element every player has a copy of (the battle's health bars and
+                          // ladybug icons), where one identity names all four copies and a single
+                          // side would be wrong for half of them. The identity still names content;
+                          // only the direction comes from where each copy is drawn. Applies only in
+                          // the battle state (6); Center everywhere else. See resolveSides.
+        };
+
+        // Set by the app once per controller poll: true only while the game is in its racing state.
+        void setRacing(bool racing);
+        bool racing();
+
+        // The app's game-state value, shown in the inspector's header so that a list of elements can
+        // be tied to the screen it came from. BAR keeps it at gGameSettings + 0xA4.
+        void setGameState(uint32_t state);
+        uint32_t gameState();
+
+        // Whether the game's own pause menu is up (gGameSettings + 0x86). Pushed in by the app from
+        // the SI poll, like the racing flag. It matters because a paused race is still a race as far
+        // as currentGameState is concerned, and the two screens want opposite things from the
+        // orthographic layer -- see orthoViewportOrigin.
+        void setPaused(bool paused);
+        bool paused();
+
+        // Where a 2D rectangle belongs on the widened frame, and -- as a side effect -- the point at
+        // which the element is published to the port's inspector.
+        //
+        // `rect` is the draw's own rectangle in RDP quarter-pixel coordinates and `screenWidth` the
+        // colour image's width in game pixels (320 for BAR); `fillCycle` says whether the draw is a
+        // fill-cycle rectangle.
+        //
+        // The remaining four build the element's IDENTITY, which is what a tag names -- and which of
+        // them is used depends on the draw, because a stale value is worse than no value:
+        //
+        //   textured        "tex:<G_SETTIMG address>", with the display list as the second identity.
+        //   fill cycle      "fill:<fill colour>", which is far more specific than the display list
+        //                   and stable between frames.
+        //   untextured      "dl:<display list address>". NOT the texture address: an untextured draw
+        //                   carries whatever G_SETTIMG last set, which belongs to some other element
+        //                   entirely. Tagging by it moved a menu's text when the thing being tagged
+        //                   was the black overlay drawn over it.
+        Class classifyRect(const FixedRect &rect, int32_t screenWidth, bool fillCycle,
+            uint32_t textureAddress, uint32_t displayListAddress, bool textureOn, uint32_t fillColor);
+
+        // The extended-GBI origin that realises a class, for the left and right edge of an element.
+        // Center, Stretch and Spill all want G_EX_ORIGIN_NONE: neither of the last two moves an
+        // element, they change how wide it may be drawn and how far it may run.
+        uint16_t leftOriginFor(Class cls);
+        uint16_t rightOriginFor(Class cls);
+
+        // What an ORTHOGRAPHIC PROJECTION should do, decided per projection.
+        //
+        // EVERY projection in the frame is offered, not only the orthographic ones -- a projection is
+        // the only handle there is on anything drawn as geometry, since individual triangles are not
+        // hooked. Only orthographic layers get a default; everything else is Center until tagged, so
+        // listing them changes nothing on its own.
+        //
+        // BAR draws some of its 2D as geometry under an orthographic projection rather than as
+        // texture rectangles, and those layers never appear in the rectangle list at all -- they go
+        // through the projection processor instead. Two of them want opposite things:
+        //
+        //   * the speedometer's needle lives in the dial at the left of the screen, and has to
+        //     follow it there or the two come apart. That is Class::Left.
+        //   * the pause screen's darkened backdrop has to cover the whole widened frame. That is
+        //     Class::Stretch, which means "do not compensate the projection's aspect ratio", so the
+        //     layer's own 320-wide space is mapped across the full frame.
+        //
+        // They cannot be told apart by when they are drawn -- a paused race is still a race -- so
+        // they are told apart by WHICH projection they are. `projectionIndex` is the same number
+        // RT64's own debugger shows in its Game editor ("Orthographic #4"), and the identity a tag
+        // names is "ortho:<n>", so what is seen there and what is tagged here are the same thing.
+        //
+        // Untagged, the answer is the old rule: Left while racing, Center otherwise. BAR_HUD_ORTHO=0
+        // turns that default off on its own, to tell the rectangle and projection halves apart on
+        // screen; it does not disable tags.
+        //
+        // `publish` says whether to hand this projection to the inspector. The same question is
+        // asked from two places -- the projection processor, which transforms the layer, and the
+        // framebuffer renderer, which places its viewport -- and they MUST get the same answer or
+        // the layer is placed by one rule and transformed by the other. Only the first publishes.
+        // The projection types the classifier distinguishes, matching RT64's Projection::Type and
+        // the prefix each one's identity carries.
+        enum class ProjKind : int {
+            Perspective = 0,   // "persp:<n>" -- the 3D world
+            Orthographic = 1,  // "ortho:<n>" -- 2D drawn as geometry
+            Rectangle = 2,     // "rect:<n>"  -- the layer texture rectangles are drawn into
+            Other = 3,         // "proj:<n>"
+        };
+
+        // A projection layer is identified by WHAT IT DRAWS, never by its index. The index is only
+        // its position in this frame's list, and that differs between courses and screens: the
+        // speedometer's needle was ortho:1 on one course and ortho:3 on another, while ortho:5 was
+        // the pause backdrop, so every tag promoted against an index fixed one course and broke
+        // another. The identity is "<kind>#<hash>", a hash over the layer's FIRST draw call of its
+        // colour combiner, other mode, texture on/off, triangle count and, when textured, the
+        // content hash of each texture tile. Colours and vertices are left out on purpose: they
+        // animate (fades, the needle's angle) while the layer stays the same element.
+        // `callTiles` is the workload's DrawCallTile array the calls' tileIndex refers to.
+        Class classifyProjection(ProjKind kind, const Projection &proj, const DrawCallTile *callTiles,
+            size_t callTileCount, bool publish);
+
+        // The magnification Class::Cover asks for, as a factor on the projection matrix's x and y,
+        // which scales the layer about the centre of BAR's 320x240 screen. Returns 1.0 for every other
+        // class. The factors put the layer's own quad on the frame's edges: `quadMin`/`quadMax` are the
+        // screen-space bounds (N64 pixels) of the layer's first draw call. The same layer draws
+        // different quads -- (21,16)-(297,225) on the pause screen, (31,23)-(288,219) in the pre-race
+        // course overview -- so one fixed rectangle left the overview short of the edges. Each factor
+        // is the larger of the two sides' ratios, so an off-centre quad still reaches both edges.
+        // With no usable bounds, the television inset (22,17)-(296,223) is used instead.
+        // BAR_HUD_COVER_INSET="l,t,r,b" forces a fixed rectangle, as before.
+        void coverScale(Class cls, float quadMinX, float quadMinY, float quadMaxX, float quadMaxY,
+            float *outX, float *outY);
+
+        // Turns a class into the viewport origin the projection processor wants. Stretch and Center
+        // both give G_EX_ORIGIN_NONE -- Stretch is expressed by suppressing the aspect-ratio
+        // compensation instead, which is a separate lever at the same call site.
+        uint16_t viewportOriginFor(Class cls);
+
+        // Class::Sides made concrete for one draw whose horizontal centre is `centreX` game pixels on
+        // a `screenWidth`-wide screen. Any other class is returned unchanged.
+        Class resolveSides(Class cls, float centreX, int32_t screenWidth);
+
+        // Whether a projection drawn into `inter` (its scissor intersected with its viewport) covers
+        // enough of its framebuffer pair's scissor `fbScissor` to be widened. The projection
+        // processor (which widens the matrix) and the framebuffer renderer (which widens the
+        // viewport and scissor) MUST both ask this one function: when they disagreed, the sky was
+        // widened and then clipped straight back to 4:3.
+        //
+        // Three ways to qualify, in order:
+        //   1. Upstream's strict test: `inter` spans the pair's scissor from edge to edge.
+        //   2. BAR_ASPECT_COVER (default 80): it covers that percentage of the pair's width. BAR's
+        //      racing viewport is inset for a CRT (275/320) and clamped to sScreenWidth - 1, so it
+        //      never passes the strict test.
+        //   3. A split-screen tile, for perspective projections only: half the pair's width (45-55 %)
+        //      and touching its left or right edge (1 px tolerance). The pair's scissor is the union
+        //      of everything drawn in it, and in BAR's 4-player battle player four's view shares its
+        //      pair with the full-screen HUD pass drawn straight after it: 160 against 320, 50 %, so
+        //      it stayed 4:3 while the other three -- each alone in its pair -- were widened.
+        //      BAR_SPLIT_TILE=0 turns this off for A/B.
+        bool coversForWidening(bool perspective, const FixedRect &inter, const FixedRect &fbScissor);
+
+        // BAR's split-screen dividers, extended to the frame's edges. Called from RDP::fillRect with
+        // the rectangle in RDP quarter-pixel coordinates, before it is recorded; adjusts it in place
+        // and returns true when it did.
+        //
+        // The dividers between the split-screen views are two thin black fill-cycle rectangles drawn
+        // at BAR's overscan inset, measured (BAR_HUD_TRACE=2, 4-player battle) at (22,119)-(298,121)
+        // and (159,16)-(161,224). The views themselves reach the frame's edges -- patches/
+        // viewport_patch.c snaps their inset edges, RT64 widens them -- so the dividers stopped
+        // short of them. This snaps the same four inset edges on a line at most 2 px thick, the
+        // same rule the viewport patch applies to viewports. A horizontal divider then spans the
+        // whole 320-wide screen, which RT64 already stretches across the widened frame, as it does
+        // every full-width fill. Only black (0x00010001) lines on a 320-wide colour image qualify.
+        // BAR_SPLIT_DIVIDERS=0 turns it off for A/B.
+        // BAR_HUD_TRACE=2: the full element listing (see rt64_bar_hud.cpp).
+        bool traceAllEnabled();
+
+        // The identity the last classifyProjection call on this thread computed, for traces that
+        // run straight after it (the projection processor's [hud-ortho] listing).
+        const char *lastProjectionIdentity();
+
+        bool snapSplitDivider(int32_t screenWidth, uint32_t fillColor, int32_t &ulx, int32_t &uly,
+            int32_t &lrx, int32_t &lry);
+
+        // End of a display list, which is where the list of elements the inspector shows is
+        // published. Called from State::advanceWorkload.
+        void endFrame();
+    }
+};
+
+// ---- The port's side of the inspector ----------------------------------------------------------
+//
+// RT64 is a library and must keep building on its own, so none of this is a call into the port: the
+// port sets these pointers at startup (src/main/bar_inspector.cpp) and they stay null otherwise.
+// Every call site checks for null, so an unpatched or standalone RT64 behaves exactly as before.
+extern "C" {
+    // Draws the port's window inside RT64's inspector UI, with an ImGui frame already open. Called
+    // once per frame from State::inspect(), which only runs in RT64's developer mode.
+    extern void (*RT64_PortInspectorHook)();
+
+    // One classified 2D element of the frame being built. Extents are in the game's own 320x240
+    // pixels, before any widescreen arithmetic. `kind` is "tex", "fill", "untex" or "ortho" -- which
+    // identity scheme this element got, shown in the panel so that two rows that look alike can be
+    // told apart. An "ortho" row is a whole projection rather than a single draw, and arrives from
+    // the projection processor rather than from the RDP.
+    extern void (*RT64_BarHudNoteElement)(const char *identity, const char *secondIdentity,
+        float minX, float maxX, float minY, float maxY, int givenClass, const char *kind);
+
+    // End of the display list: the frame just noted is complete and may be shown.
+    extern void (*RT64_BarHudEndFrame)();
+
+    // The port's tag lookup: the inspector's live override first, then hud.json. Returns non-zero
+    // and writes a BarHud::Class into *outClass when this identity is tagged. Installed even when
+    // the inspector itself is off, so that a saved hud.json still applies.
+    extern int (*RT64_BarHudTagLookup)(const char *identity, const char *secondIdentity, int *outClass);
+}

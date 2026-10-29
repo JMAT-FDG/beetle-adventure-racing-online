@@ -1,0 +1,15 @@
+{
+    "api_option": "Auto",
+    "ar_option": "Original",
+    "developer_mode": false,
+    "divot_option": "Auto",
+    "ds_option": 1,
+    "hpfb_option": "Auto",
+    "hr_option": "Expand",
+    "msaa_option": "MSAA4X",
+    "present_fill_mode": "Pillarbox",
+    "res_option": "Auto",
+    "rr_manual_value": 144,
+    "rr_option": "Display",
+    "wm_option": "Windowed"
+}

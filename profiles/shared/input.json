@@ -1,0 +1,608 @@
+{
+    "ports": [
+        {
+            "bindings": {
+                "a": {
+                    "code": 27,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "analog_down": {
+                    "code": 81,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "analog_left": {
+                    "code": 80,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "analog_right": {
+                    "code": 79,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "analog_up": {
+                    "code": 82,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "b": {
+                    "code": 29,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "c_down": {
+                    "code": 14,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "c_left": {
+                    "code": 13,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "c_right": {
+                    "code": 15,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "c_up": {
+                    "code": 12,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "d_down": {
+                    "code": 10,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "d_left": {
+                    "code": 9,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "d_right": {
+                    "code": 11,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "d_up": {
+                    "code": 23,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "l": {
+                    "code": 20,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "r": {
+                    "code": 26,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "start": {
+                    "code": 40,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "z": {
+                    "code": 225,
+                    "dir": 0,
+                    "source": "Keyboard"
+                }
+            },
+            "connected": true,
+            "device": {
+                "guid": "",
+                "name": "",
+                "type": "Keyboard",
+                "uid": ""
+            },
+            "pak": "ControllerPak",
+            "profile": "Default Keyboard"
+        },
+        {
+            "bindings": {
+                "a": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_down": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_left": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_right": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_up": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "b": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_down": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_left": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_right": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_up": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_down": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_left": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_right": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_up": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "l": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "r": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "start": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "z": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                }
+            },
+            "connected": false,
+            "device": {
+                "guid": "",
+                "name": "",
+                "type": "None",
+                "uid": ""
+            },
+            "pak": "ControllerPak",
+            "profile": ""
+        },
+        {
+            "bindings": {
+                "a": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_down": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_left": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_right": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_up": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "b": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_down": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_left": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_right": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_up": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_down": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_left": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_right": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_up": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "l": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "r": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "start": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "z": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                }
+            },
+            "connected": false,
+            "device": {
+                "guid": "",
+                "name": "",
+                "type": "None",
+                "uid": ""
+            },
+            "pak": "ControllerPak",
+            "profile": ""
+        },
+        {
+            "bindings": {
+                "a": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_down": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_left": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_right": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "analog_up": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "b": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_down": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_left": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_right": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "c_up": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_down": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_left": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_right": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "d_up": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "l": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "r": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "start": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                },
+                "z": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "None"
+                }
+            },
+            "connected": false,
+            "device": {
+                "guid": "",
+                "name": "",
+                "type": "None",
+                "uid": ""
+            },
+            "pak": "ControllerPak",
+            "profile": ""
+        }
+    ],
+    "profiles": [
+        {
+            "bindings": {
+                "a": {
+                    "code": 27,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "analog_down": {
+                    "code": 81,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "analog_left": {
+                    "code": 80,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "analog_right": {
+                    "code": 79,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "analog_up": {
+                    "code": 82,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "b": {
+                    "code": 29,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "c_down": {
+                    "code": 14,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "c_left": {
+                    "code": 13,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "c_right": {
+                    "code": 15,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "c_up": {
+                    "code": 12,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "d_down": {
+                    "code": 10,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "d_left": {
+                    "code": 9,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "d_right": {
+                    "code": 11,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "d_up": {
+                    "code": 23,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "l": {
+                    "code": 20,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "r": {
+                    "code": 26,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "start": {
+                    "code": 40,
+                    "dir": 0,
+                    "source": "Keyboard"
+                },
+                "z": {
+                    "code": 225,
+                    "dir": 0,
+                    "source": "Keyboard"
+                }
+            },
+            "name": "Default Keyboard"
+        },
+        {
+            "bindings": {
+                "a": {
+                    "code": 0,
+                    "dir": 0,
+                    "source": "GamepadButton"
+                },
+                "analog_down": {
+                    "code": 1,
+                    "dir": 1,
+                    "source": "GamepadAxis"
+                },
+                "analog_left": {
+                    "code": 0,
+                    "dir": -1,
+                    "source": "GamepadAxis"
+                },
+                "analog_right": {
+                    "code": 0,
+                    "dir": 1,
+                    "source": "GamepadAxis"
+                },
+                "analog_up": {
+                    "code": 1,
+                    "dir": -1,
+                    "source": "GamepadAxis"
+                },
+                "b": {
+                    "code": 1,
+                    "dir": 0,
+                    "source": "GamepadButton"
+                },
+                "c_down": {
+                    "code": 3,
+                    "dir": 1,
+                    "source": "GamepadAxis"
+                },
+                "c_left": {
+                    "code": 2,
+                    "dir": -1,
+                    "source": "GamepadAxis"
+                },
+                "c_right": {
+                    "code": 2,
+                    "dir": 1,
+                    "source": "GamepadAxis"
+                },
+                "c_up": {
+                    "code": 3,
+                    "dir": -1,
+                    "source": "GamepadAxis"
+                },
+                "d_down": {
+                    "code": 12,
+                    "dir": 0,
+                    "source": "GamepadButton"
+                },
+                "d_left": {
+                    "code": 13,
+                    "dir": 0,
+                    "source": "GamepadButton"
+                },
+                "d_right": {
+                    "code": 14,
+                    "dir": 0,
+                    "source": "GamepadButton"
+                },
+                "d_up": {
+                    "code": 11,
+                    "dir": 0,
+                    "source": "GamepadButton"
+                },
+                "l": {
+                    "code": 9,
+                    "dir": 0,
+                    "source": "GamepadButton"
+                },
+                "r": {
+                    "code": 10,
+                    "dir": 0,
+                    "source": "GamepadButton"
+                },
+                "start": {
+                    "code": 6,
+                    "dir": 0,
+                    "source": "GamepadButton"
+                },
+                "z": {
+                    "code": 4,
+                    "dir": 1,
+                    "source": "GamepadAxis"
+                }
+            },
+            "name": "Default Gamepad"
+        }
+    ]
+}
