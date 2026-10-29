@@ -25,6 +25,12 @@ La sauvegarde Controller Pak et les réglages partagés sont dans `profiles/shar
 
 Les codes de connexion, identifiants GitHub, journaux de test et autres projets ne sont pas inclus.
 
+## Inviter les amis au dépôt privé
+
+Dans GitHub : **Settings → Collaborators → Add people**, rechercher le pseudo GitHub de l'ami, puis confirmer l'ajout. Il accepte l'invitation et peut ensuite ouvrir **Releases** pour télécharger la version Windows.
+
+Sur un dépôt personnel privé, les collaborateurs disposent également du droit d'écriture ; GitHub ne propose pas de rôle lecture seule dans ce cas. Voir les [instructions GitHub](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/inviting-collaborators-to-a-personal-repository) et les [permissions des dépôts personnels](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/permission-levels-for-a-personal-account-repository).
+
 ## État réel du prototype
 
 - Trois objets joueurs, trois vues et les commandes du troisième joueur reçues par le vrai moteur ont été vérifiés dans des tests locaux.
