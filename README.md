@@ -21,7 +21,7 @@ Connexion directe **TCP 28765**. Sur un même réseau, utiliser l'adresse locale
 
 ## Contenu débloqué
 
-Les 11 voitures, les 6 circuits, les 4 championnats et les 9 arènes sont accessibles dès le lancement grâce à `cheats.cfg` (`unlock_all=1`, `unlock_arenas=1`). Aucun bonus de vitesse ou de conduite n’est activé. Pour une ancienne installation, extraire la nouvelle version dans un nouveau dossier, ou fermer le jeu puis lancer `Installer sauvegarde.cmd` pour restaurer le profil partagé avec sauvegarde des anciens fichiers. Ce déblocage est appliqué par le portage à chaque lancement, sans modifier la ROM.
+Les 11 voitures, les 6 circuits, les 4 championnats et les 9 arènes sont débloqués par défaut dans le programme, en solo comme en multijoueur local ou en ligne. Un ancien profil, même avec `unlock_all=0`, ne désactive plus ce déblocage. Aucun bonus de vitesse ou de conduite n’est activé par défaut. Fermer le jeu puis lancer la nouvelle version ; aucune restauration de sauvegarde n’est nécessaire.
 
 ## Sauvegardes et réglages
 

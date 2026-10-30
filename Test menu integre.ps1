@@ -1,4 +1,4 @@
-﻿param([switch]$Session,[switch]$Unlocks)
+﻿param([switch]$Session,[switch]$Unlocks,[switch]$LockedProfile)
 $ErrorActionPreference='Stop'
 $root=$PSScriptRoot
 $run=Join-Path $root ('logs/menu-'+(Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
@@ -8,6 +8,10 @@ if($Unlocks){
     $unlocks=Join-Path $root 'profiles/shared/cheats.cfg'
     if(!(Test-Path -LiteralPath $unlocks)){$unlocks=Join-Path $root 'share-kit/cheats.cfg'}
     Copy-Item -LiteralPath $unlocks -Destination $profile
+}
+if($LockedProfile){
+    $profile=Join-Path $run 'profile';[void][IO.Directory]::CreateDirectory($profile)
+    [IO.File]::WriteAllText((Join-Path $profile 'cheats.cfg'),"unlock_all=0`nunlock_arenas=0`n")
 }
 $info=New-Object Diagnostics.ProcessStartInfo
 $info.FileName=Join-Path $root 'tools/host-build/beetle-adventure-racing-recomp.exe'
@@ -38,3 +42,5 @@ if($Session -and $stderr.Result -notmatch 'PASS: integrated menu client process 
 'PASS: integrated menu test (hidden window)'
 
 if($Unlocks -and $stderr.Result -notmatch '\[cheats\] applying: unlock_all unlock_arenas'){throw 'Unlock configuration was not applied by the game'}
+
+if($stderr.Result -notmatch "\[unlocks\] verified cars=11 tracks=6 cups=4 arenas=9 flags=111111111"){throw "Engine unlock state was not verified"}

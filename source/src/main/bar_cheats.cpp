@@ -103,6 +103,17 @@ void apply_frame(uint8_t* rdram) {
         for (int i = 0; i < 9; i++) MEM_B(i, se(0x8002D000)) = (int8_t)1; // per-arena availability bits
     }
 
+    if (on(Id::UnlockAll)) {
+        static unsigned polls = 0;
+        if (++polls == 600) {
+            std::fprintf(stderr, "[unlocks] verified cars=%d tracks=%d cups=%d arenas=%d flags=",
+                MEM_W(0,se(0x8002CFF4)), MEM_W(0,se(0x8002CFF0)),
+                MEM_W(0,se(0x8002CFF8)), MEM_W(0,se(0x8002CFFC)));
+            for (int i=0;i<9;++i) std::fprintf(stderr,"%d",int(MEM_BU(i,se(0x8002D000))));
+            std::fprintf(stderr,"\n");
+        }
+    }
+
     // --- Reveal BAR's hidden cheat menu: set the 18 gOpenCheatFlag bytes (0x8002D009..0x8002D01A) ---
     if (on(Id::RevealCheatMenu)) {
         for (int i = 0; i < 18; i++) MEM_B(i, se(0x8002D009)) = (int8_t)1;
@@ -128,6 +139,11 @@ void save() {
 }
 
 void load() {
+    // Content availability is a port default for solo, local and online play.
+    // Old or missing profiles must not silently restore the original locked roster.
+    set(Id::UnlockAll, true);
+    set(Id::UnlockArenas, true);
+    std::fprintf(stderr, "[unlocks] profile=%s; all content enabled\n", cheats_file().string().c_str());
     try {
         std::ifstream f(cheats_file());
         if (!f) return;
@@ -138,7 +154,11 @@ void load() {
             const std::string key = line.substr(0, eq);
             const bool val = line.find('1', eq) != std::string::npos;
             for (std::size_t i = 0; i < (std::size_t)Id::Count; i++)
-                if (key == kInfo[i].id) { g_enabled[i].store(val, std::memory_order_relaxed); break; }
+                if (key == kInfo[i].id) {
+                    if (i != (std::size_t)Id::UnlockAll && i != (std::size_t)Id::UnlockArenas)
+                        g_enabled[i].store(val, std::memory_order_relaxed);
+                    break;
+                }
         }
     } catch (...) {}
 }
