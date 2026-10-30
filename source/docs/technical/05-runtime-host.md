@@ -643,3 +643,8 @@ no physical input polling or rumble, isolated settings via required `BAR_TEST_CO
 It starts the game programmatically after the renderer has been pumping for two seconds and exits
 at the time limit. Its watchdog exit is not proof of race success. See
 [`../ONLINE_RACING_RESEARCH.md`](../ONLINE_RACING_RESEARCH.md) for measured criteria and limitations.
+
+
+### Shared unlocked profile (2026-10-30)
+
+The Windows release ships `profiles/shared/cheats.cfg` and a portable runtime copy with `unlock_all=1` and `unlock_arenas=1`. Existing `bar_cheats::apply_frame` writes the menu counters (11 cars, 6 tracks, 4 championships) and nine arena flags on controller polls. This is a runtime unlock, not a modified ROM or a completed Controller Pak save. The profile installer backs up and restores this file alongside settings. Run `Test menu integre.ps1 -Unlocks` to verify the real engine logs `[cheats] applying: unlock_all unlock_arenas` in an isolated hidden session.

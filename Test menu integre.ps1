@@ -1,8 +1,14 @@
-param([switch]$Session)
+﻿param([switch]$Session,[switch]$Unlocks)
 $ErrorActionPreference='Stop'
 $root=$PSScriptRoot
 $run=Join-Path $root ('logs/menu-'+(Get-Date -Format 'yyyyMMdd-HHmmss-fff'))
 [void][IO.Directory]::CreateDirectory($run)
+if($Unlocks){
+    $profile=Join-Path $run 'profile';[void][IO.Directory]::CreateDirectory($profile)
+    $unlocks=Join-Path $root 'profiles/shared/cheats.cfg'
+    if(!(Test-Path -LiteralPath $unlocks)){$unlocks=Join-Path $root 'share-kit/cheats.cfg'}
+    Copy-Item -LiteralPath $unlocks -Destination $profile
+}
 $info=New-Object Diagnostics.ProcessStartInfo
 $info.FileName=Join-Path $root 'tools/host-build/beetle-adventure-racing-recomp.exe'
 $info.Arguments='"'+(Join-Path $root 'roms/beetle-usa.z64')+'"'
@@ -30,3 +36,5 @@ Write-Output $run
 if($process.ExitCode -ne 0 -or $stderr.Result -notmatch 'PASS: integrated online panel'){Write-Output $stderr.Result;throw 'Integrated menu test failed'}
 if($Session -and $stderr.Result -notmatch 'PASS: integrated menu client process exit=0'){Write-Output $stderr.Result;throw 'Integrated menu session failed'}
 'PASS: integrated menu test (hidden window)'
+
+if($Unlocks -and $stderr.Result -notmatch '\[cheats\] applying: unlock_all unlock_arenas'){throw 'Unlock configuration was not applied by the game'}

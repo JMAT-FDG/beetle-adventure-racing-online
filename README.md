@@ -19,6 +19,10 @@ Le panneau est aussi accessible dans **Paramètres → En ligne**. L'hébergemen
 
 Connexion directe **TCP 28765**. Sur un même réseau, utiliser l'adresse locale du PC hôte ; `127.0.0.1` désigne toujours le PC sur lequel on la saisit. Entre deux réseaux, il faut une connexion directe routable ou un réseau privé reliant les PC. Il n'y a pas de relais ou de traversée NAT automatique. Le code de partie est requis ; le flux vidéo/audio n'est pas chiffré.
 
+## Contenu débloqué
+
+Les 11 voitures, les 6 circuits, les 4 championnats et les 9 arènes sont accessibles dès le lancement grâce à `cheats.cfg` (`unlock_all=1`, `unlock_arenas=1`). Aucun bonus de vitesse ou de conduite n’est activé. Pour une ancienne installation, extraire la nouvelle version dans un nouveau dossier, ou fermer le jeu puis lancer `Installer sauvegarde.cmd` pour restaurer le profil partagé avec sauvegarde des anciens fichiers. Ce déblocage est appliqué par le portage à chaque lancement, sans modifier la ROM.
+
 ## Sauvegardes et réglages
 
 La sauvegarde Controller Pak et les réglages partagés sont dans `profiles/shared/`. La version Windows est portable : ses données restent dans `tools/host-build/`. `Installer sauvegarde.cmd` restaure la sauvegarde partagée après avoir sauvegardé les fichiers existants ; fermer le jeu avant de l'utiliser. Une ROM déjà importée n'est jamais écrasée par cette opération.
